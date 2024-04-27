@@ -1,0 +1,138 @@
+// grid variables 
+$cols: 12;
+$gutter: 20px;
+
+$lg-device: 1200px;
+$md-device: 760px;
+$sm-device: 480px;
+
+// box sizing
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
+// mixin media-query
+@mixin device($size) {
+  @if $size == lg {
+    @media screen and (min-width: $lg-device) {
+      @content;
+    }
+  }
+  @else if $size == md {                                         
+    // tamanho de tela entre 760 px e 1199px
+    @media screen and (min-width: $md-device) and (max-width: #{$lg-device - 1}) {
+      @content;
+    }
+  }
+  @else if $size == sm {
+    // tamanho de tela menor q 759px
+    @media screen and (max-width: #{$md-device - 1}) {
+      @content;
+    }
+  }
+}
+
+// grid function
+@function grid($col, $offset: false) {
+  // divide o numero da coluna pela quant. total definida acima(12), e multiplica por 100 pra saber a % no grid
+  $width: calc($col / $cols * 100) + '%';
+  // diminui a largura pelo gutter pra dar o valor exato de tamanho
+  $result: calc(#{$width} - #{$gutter});
+
+  // pega a largura de uma coluna em branco acrescenta margin-left de 10px
+  @if $offset == offset {
+    $gutter: calc($gutter /2);
+    $result: calc(#{$width} + #{$gutter});
+  }
+
+  @return $result;
+}
+
+// gerar classes de grid
+@for $i from 1 through $cols {  // faz um loop de 1 ate a quantidade de colunas definidas
+  // a cada loop acrescenta o num do id a classe, pra definir a divisao do grid
+  .grid-#{$i} {
+    width: grid($i);
+  }
+}
+
+// mixin estrutura grid
+@mixin grid-structure {
+  float: left;
+  min-height: 1px;
+  margin-left: calc($gutter / 2); 
+  margin-right: calc($gutter / 2); 
+
+  @include device(sm) {
+    width: 100%;
+    float: none;
+    margin-left: 0px; 
+    margin-right: 0px; 
+  }
+}
+// seleciona todas as classes que comecem com "grid-" e inclui o mixin acima
+[class^="grid-"]  {
+  @include grid-structure;
+}
+
+// gerar classes offset
+@for $i from 1 through $cols {  
+  .offset-#{$i} {
+    margin-left: grid($i, offset);
+    @extend %offset;
+  }
+}
+  // tira o offset em mobile
+@include device(sm) {
+  %offset {
+    margin-left: 0px;
+  }
+}
+
+// mixin clearfix
+@mixin clearfix {
+  &::after, &::before {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// container 
+@mixin container {
+  max-width: $lg-device;
+  margin: 0 auto;
+  position: relative;
+
+  @include device(md) {
+   max-width: $md-device;
+  }
+  @include device(sm) {
+   max-width: $sm-device;
+   padding-left: 10px;
+   padding-right: 10px;
+  }
+
+  @include clearfix;
+}
+
+.container {
+  @include container;
+}
+
+// facilita a criacao de um grid dentro de um elemento do grid
+@mixin row {
+  position: relative;
+  margin-left: calc(-1 * $gutter / 2);
+  margin-right: calc(-1 * $gutter / 2);
+
+  @include device(sm) {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  @include clearfix
+}
+
+.row {
+  @include row;
+}

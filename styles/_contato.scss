@@ -1,0 +1,82 @@
+.contato {
+  margin-top: 120px;
+  margin-bottom: 120px;
+
+  @include device(sm) {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
+  & form {
+    label {
+      @include tipo-1(18);
+      display: block;
+    }
+
+    // seleciona todos os inputs da pagina, menos o botao
+    input:not([type='button']), textarea {
+      @include tipo-1(18);
+      color: $cinza;
+      width: 100%;
+      height: 40px;
+      padding: 0 5px;
+      margin-bottom: 1em;
+      border: 2px solid $bege-escuro;
+      background: transparent;
+
+      &:hover, &:focus {
+        outline: none;
+        border-color: $bege-medio;
+      }
+    }
+
+    textarea {
+      resize: none;
+      height: 120px;
+    }
+
+    input.button {
+      @include tipo-1(18);
+      @include box-shadow(5px 5px 0 -2px $bege-medio,
+                          5px 5px 0 0 $bege-escuro);
+      cursor: pointer;
+      display: block;
+      width: 200px;
+      padding-top: 5px;
+      color: $bege-escuro;
+      text-transform: uppercase;
+      border: 2px solid $bege-escuro;
+      background: transparent;
+      transition: .3s;
+
+      &:hover {
+        @include box-shadow(3px 3px 0 -2px $bege-medio,
+        3px 3px 0 0 $bege-escuro);
+      }
+    }
+  }
+
+  .contato-info {
+    display: inline-block;
+    color: $bege-escuro;
+    margin-top: 2em;
+    margin-bottom: 3em;
+
+    @include device(lg) { 
+      float: right;
+      margin-top: -3em;
+      text-align: right;
+    }
+  }
+
+  .contato-mapa {
+    display: block;
+    clear: both;
+    @include box-shadow(0 0 0 10px $bege-medio);
+
+    img {
+      width: 100%;
+    }
+  }
+}
+
